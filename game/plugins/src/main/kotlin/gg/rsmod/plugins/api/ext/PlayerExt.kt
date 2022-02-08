@@ -300,6 +300,17 @@ fun Player.setVarp(id: Int, value: Int) {
     varps.setState(id, value)
 }
 
+fun Player.getSong(slot: Int): Int = songs.getUnlocked(slot)
+
+fun Player.setSong(slot: Int, value: Int) {
+    songs.setUnlocked(slot, value)
+}
+
+fun Player.openGe(p: Player) {
+    p.openInterface(465, InterfaceDestination.MAIN_SCREEN)
+    p.openInterface(467, InterfaceDestination.TAB_AREA)
+}
+
 fun Player.toggleVarp(id: Int) {
     varps.setState(id, varps.getState(id) xor 1)
 }

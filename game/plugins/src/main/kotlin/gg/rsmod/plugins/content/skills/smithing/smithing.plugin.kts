@@ -25,7 +25,14 @@ val barIds = barDefs.keys
 /**
  * The smithing interface child components
  */
-val smithingInterfaceComponents = IntRange(2, 30)
+val smithingInterfaceComponents = IntRange(8, 35)
+val quantityInterfaceComponents = IntRange(3, 7)
+
+
+/**
+ * Amount to me smithed
+ */
+var amount = 1
 
 /**
  * The smithing interface id
@@ -135,6 +142,23 @@ fun openSmithingInterface(player: Player, bar: Bar) {
 /**
  * Listen on the child components for the smithing interface
  */
+
+quantityInterfaceComponents.forEach { child1 ->
+    on_button(interfaceId = smithingInterface, component = child1) {
+        player.queue(TaskPriority.STRONG) {
+            // The number of items to smith
+            amount = when (child1) {
+                3 -> 1
+                4 -> 5
+                5 -> 10
+                6 -> inputInt("Enter amount:")
+                7 -> player.inventory.capacity
+                else -> 1
+            }
+        }
+    }
+}
+
 smithingInterfaceComponents.forEach { child ->
     on_button(interfaceId = smithingInterface, component = child) {
 
@@ -160,7 +184,7 @@ smithingInterfaceComponents.forEach { child ->
             player.queue(TaskPriority.STRONG) {
 
                 // The number of items to smith
-                val amount = when (player.attr[INTERACTING_OPT_ATTR]) {
+                /*val amount = when (player.attr[INTERACTING_OPT_ATTR]) {
                     1 -> 1
                     2 -> 5
                     3 -> 10
@@ -170,7 +194,7 @@ smithingInterfaceComponents.forEach { child ->
                         world.sendExamine(player, item.id, ExamineEntityType.ITEM)
                         return@queue
                     }
-                }
+                }*/
 
                 // Close the smithing interface
                 player.closeInterface(smithingInterface)

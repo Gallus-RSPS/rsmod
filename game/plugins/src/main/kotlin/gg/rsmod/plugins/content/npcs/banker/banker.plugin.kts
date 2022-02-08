@@ -2,7 +2,9 @@ package gg.rsmod.plugins.content.npcs.banker
 
 import gg.rsmod.plugins.content.inter.bank.openBank
 
-arrayOf(Npcs.BANKER_1027, Npcs.BANKER_1028).forEach { banker ->
+var BANKERS = arrayOf(Npcs.BANKER_1027, Npcs.BANKER_1028, Npcs.BANKER_2897, Npcs.BANKER_2898)
+
+BANKERS.forEach { banker ->
     on_npc_option(npc = banker, option = "talk-to", lineOfSightDistance = 2) {
         player.queue {
             dialog(this)
@@ -15,6 +17,20 @@ arrayOf(Npcs.BANKER_1027, Npcs.BANKER_1028).forEach { banker ->
         open_collect(player)
     }
 }
+
+//arrayOf(Npcs.BANKER_1027, Npcs.BANKER_1028).forEach { banker ->
+//    on_npc_option(npc = banker, option = "talk-to", lineOfSightDistance = 2) {
+//        player.queue {
+//            dialog(this)
+//        }
+//    }
+//    on_npc_option(npc = banker, option = "bank", lineOfSightDistance = 2) {
+//        player.openBank()
+//    }
+//    on_npc_option(npc = banker, option = "collect", lineOfSightDistance = 2) {
+//        open_collect(player)
+//    }
+//}
 
 suspend fun dialog(it: QueueTask) {
     it.chatNpc("Good day, how may I help you?")

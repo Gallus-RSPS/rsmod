@@ -18,6 +18,7 @@ import gg.rsmod.game.model.interf.InterfaceSet
 import gg.rsmod.game.model.interf.listener.PlayerInterfaceListener
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.priv.Privilege
+import gg.rsmod.game.model.songs.SongSet
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
@@ -51,6 +52,18 @@ open class Player(world: World) : Pawn(world) {
      * @see Privilege
      */
     var privilege = Privilege.DEFAULT
+
+    /**
+     * Flour Bins at Windmills
+     */
+    var regularFlour = 0
+    var harmonyFlour = 0
+    var hopperGrain = 0
+
+    /**
+     * Represents al songs in the game
+     */
+    val songs = SongSet(maxSongs = world.gameContext.songs)
 
     /**
      * The base region [Coordinate] is the most bottom-left (south-west) tile where
@@ -289,13 +302,18 @@ open class Player(world: World) : Pawn(world) {
             }
         }
 
-        val oldRegion = lastTile?.regionId ?: -1
-        if (oldRegion != tile.regionId) {
-            if (oldRegion != -1) {
-                world.plugins.executeRegionExit(this, oldRegion)
-            }
-            world.plugins.executeRegionEnter(this, tile.regionId)
-        }
+
+        // Replaces the old region check below
+        checkRegionChange()
+
+//        val oldRegion = lastTile?.regionId ?: -1
+//
+//        if (oldRegion != tile.regionId) {
+//            if (oldRegion != -1) {
+//                world.plugins.executeRegionExit(this, oldRegion)
+//            }
+//            world.plugins.executeRegionEnter(this, tile.regionId)
+//        }
 
         if (inventory.dirty) {
             write(UpdateInvFullMessage(interfaceId = 149, component = 0, containerKey = 93, items = inventory.rawItems))
@@ -357,6 +375,21 @@ open class Player(world: World) : Pawn(world) {
             }
         }
     }
+
+    /**
+     * Logic that checks if the region has changed
+     *
+     * This fixes not detecting region change while walking
+     */
+    fun checkRegionChange() {
+        var oldRegion = lastTile?.regionId ?: -1
+        if (oldRegion != tile.regionId) {
+            if (oldRegion != -1)
+                world.plugins.executeRegionExit(this, oldRegion)
+            world.plugins.executeRegionEnter(this, tile.regionId)
+        }
+    }
+
 
     /**
      * Logic that should be executed every game cycle, after

@@ -17,6 +17,7 @@ object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
         val changedHeight = oldTile?.height != pawn.tile.height
 
         if (moved) {
+            pawn.checkRegionChange()
             pawn.lastTile = Tile(pawn.tile)
         }
         pawn.moved = false

@@ -38,6 +38,7 @@ object NpcCombatDsl {
             combatBuilder.setRespawnDelay(builder.respawnDelay)
             combatBuilder.setPoisonChance(builder.poisonChance)
             combatBuilder.setVenomChance(builder.venomChance)
+            combatBuilder.setDefaultWalkRadius(builder.walkRadius)
         }
 
         fun aggro(init: AggressivenessBuilder.() -> Unit) {
@@ -121,6 +122,12 @@ object NpcCombatDsl {
          * meaning the npc will always inflict venom on damage.
          */
         var venomChance = -1.0
+
+
+        /**
+         * The tiles in which an NPC may walk on its own.
+         */
+        var walkRadius = 0
     }
 
     @CombatDslMarker

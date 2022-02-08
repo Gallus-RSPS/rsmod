@@ -192,3 +192,18 @@ val LEVEL_UP_INCREMENT = AttributeKey<Int>()
  * The previous skill XP of the latest level up.
  */
 val LEVEL_UP_OLD_XP = AttributeKey<Double>()
+
+/**
+ * Sheep Shearer "The Thing" NPC
+ */
+val THE_THING = AttributeKey<Boolean>(persistenceKey = "the_thing")
+
+/**
+ * Player is on Gnomeball Pitch
+ */
+val ON_GNOMEBALL_PITCH = AttributeKey<Boolean>()
+
+/**
+ * Player has played Gnomeball Before
+ */
+val RETURNING_GB_PLAYER = AttributeKey<Boolean>(persistenceKey = "returning_gb_player")

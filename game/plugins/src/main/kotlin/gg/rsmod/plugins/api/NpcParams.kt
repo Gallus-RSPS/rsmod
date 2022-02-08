@@ -1,7 +1,13 @@
 package gg.rsmod.plugins.api
 
 import gg.rsmod.game.model.combat.NpcCombatDef
+import gg.rsmod.game.model.droptable.DropTable
+import gg.rsmod.game.model.droptable.NpcDropTableDef
 import gg.rsmod.plugins.api.ext.enumSetOf
+import org.json.JSONObject
+import java.io.File
+import java.io.InputStream
+import java.nio.charset.Charset
 
 /**
  * @author Tom <rspsmods@gmail.com>
@@ -46,6 +52,14 @@ class NpcCombatBuilder {
 
     private val deathAnimList = mutableListOf<Int>()
 
+    private var defaultAttackSound = -1
+
+    private var defaultBlockSound = -1
+
+    private var defaultWalkRadius = -1
+
+    private var deathSound = -1
+
     private var respawnDelay = -1
 
     private var aggroRadius = -1
@@ -89,11 +103,12 @@ class NpcCombatBuilder {
         }
 
         return NpcCombatDef(
-                maxHealth, stats.toList(), attackSpeed, defaultAttackAnim,
-                defaultBlockAnim, deathAnimList, respawnDelay, aggroRadius,
-                aggroTargetDelay, aggroTimer, poisonChance, venomChance,
-                poisonImmunity, venomImmunity, slayerReq, slayerXp,
-                bonuses.toList(), speciesSet)
+            maxHealth, stats.toList(), attackSpeed, defaultAttackAnim,
+            defaultBlockAnim, deathAnimList, defaultAttackSound,
+            defaultBlockSound, defaultWalkRadius, deathSound, respawnDelay, aggroRadius,
+            aggroTargetDelay, aggroTimer, poisonChance, venomChance,
+            poisonImmunity, venomImmunity, slayerReq, slayerXp,
+            bonuses.toList(), speciesSet)
     }
 
     fun setHitpoints(health: Int): NpcCombatBuilder {
@@ -156,6 +171,12 @@ class NpcCombatBuilder {
         return this
     }
 
+    fun setDefaultWalkRadius(walkRadius: Int): NpcCombatBuilder {
+        check(defaultWalkRadius == -1) {"Default walk radius already set."}
+        defaultWalkRadius = walkRadius
+        return this
+    }
+
     fun setDefaultAttackAnimation(animation: Int): NpcCombatBuilder {
         check(defaultAttackAnim == -1) { "Default attack animation already set." }
         defaultAttackAnim = animation
@@ -171,6 +192,29 @@ class NpcCombatBuilder {
     fun setCombatAnimations(attackAnimation: Int, blockAnimation: Int): NpcCombatBuilder {
         setDefaultAttackAnimation(attackAnimation)
         setDefaultBlockAnimation(blockAnimation)
+        return this
+    }
+
+    fun setDefaultAttackSound(animation: Int): NpcCombatBuilder {
+        check(defaultAttackAnim == -1) { "Default attack sound already set." }
+        defaultAttackAnim = animation
+        return this
+    }
+    fun setDefaultBlockSound(animation: Int): NpcCombatBuilder {
+        check(defaultBlockSound == -1) { "Default block sound already set." }
+        defaultBlockSound = animation
+        return this
+    }
+
+    fun setCombatSound(attackSound: Int, blockSound: Int): NpcCombatBuilder {
+        setDefaultAttackSound(attackSound)
+        setDefaultBlockSound(blockSound)
+        return this
+    }
+
+    fun setDeathSound( sound: Int): NpcCombatBuilder {
+        check(deathSound == -1) { "Default death sound already set." }
+        deathSound = sound
         return this
     }
 
@@ -337,5 +381,34 @@ class NpcCombatBuilder {
     companion object {
         private const val BONUS_COUNT = 14
         private const val DEFAULT_AGGRO_TIMER = 1000 // 10 minutes
+    }
+}
+
+class NpcDropTableBuilder {
+    private var json = ""
+    private var rolls = -1
+    private var always_table = DropTable("{}")
+    private var common_table = DropTable("{}")
+    private var uncommon_table = DropTable("{}")
+    private var rare_table = DropTable("{}")
+    private var veryrare_table = DropTable("{}")
+
+    fun build(): NpcDropTableDef {
+        rolls = JSONObject(json).optInt("rolls")
+        always_table = DropTable(JSONObject(json).optJSONObject("always").toString())
+        common_table = DropTable(JSONObject(json).optJSONObject("common").toString())
+        uncommon_table = DropTable(JSONObject(json).optJSONObject("uncommon").toString())
+        rare_table = DropTable(JSONObject(json).optJSONObject("rare").toString())
+        veryrare_table = DropTable(JSONObject(json).optJSONObject("veryrare").toString())
+
+        return NpcDropTableDef(rolls, always_table, common_table, uncommon_table, rare_table, veryrare_table)
+    }
+
+    fun setJson(jsonString: String) {
+
+        val file = File("game/plugins/src/main/kotlin/gg/rsmod/plugins/content/npcs/$jsonString")
+        val ins: InputStream = file.inputStream()
+
+        json = ins.readBytes().toString(Charset.defaultCharset())
     }
 }

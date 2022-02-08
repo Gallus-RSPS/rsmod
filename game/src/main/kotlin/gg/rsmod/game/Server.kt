@@ -6,6 +6,8 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.skill.SkillSet
+import gg.rsmod.game.model.songs.Song
+import gg.rsmod.game.model.songs.SongSet
 import gg.rsmod.game.protocol.ClientChannelInitializer
 import gg.rsmod.game.service.GameService
 import gg.rsmod.game.service.rsa.RsaService
@@ -90,17 +92,19 @@ class Server {
          * Create a game context for our configurations and services to run.
          */
         val gameContext = GameContext(initialLaunch = initialLaunch,
-                name = gameProperties.get<String>("name")!!,
-                revision = gameProperties.get<Int>("revision")!!,
-                cycleTime = gameProperties.getOrDefault("cycle-time", 600),
-                playerLimit = gameProperties.getOrDefault("max-players", 2048),
-                home = Tile(gameProperties.get<Int>("home-x")!!, gameProperties.get<Int>("home-z")!!, gameProperties.getOrDefault("home-height", 0)),
-                skillCount = gameProperties.getOrDefault("skill-count", SkillSet.DEFAULT_SKILL_COUNT),
-                npcStatCount = gameProperties.getOrDefault("npc-stat-count", Npc.Stats.DEFAULT_NPC_STAT_COUNT),
-                runEnergy = gameProperties.getOrDefault("run-energy", true),
-                gItemPublicDelay = gameProperties.getOrDefault("gitem-public-spawn-delay", GroundItem.DEFAULT_PUBLIC_SPAWN_CYCLES),
-                gItemDespawnDelay = gameProperties.getOrDefault("gitem-despawn-delay", GroundItem.DEFAULT_DESPAWN_CYCLES),
-                preloadMaps = gameProperties.getOrDefault("preload-maps", false))
+            name = gameProperties.get<String>("name")!!,
+            revision = gameProperties.get<Int>("revision")!!,
+            cycleTime = gameProperties.getOrDefault("cycle-time", 600),
+            secondTime = gameProperties.getOrDefault("second-time", 1000),
+            playerLimit = gameProperties.getOrDefault("max-players", 2048),
+            songs = gameProperties.get<Int>("songs")!!,
+            home = Tile(gameProperties.get<Int>("home-x")!!, gameProperties.get<Int>("home-z")!!, gameProperties.getOrDefault("home-height", 0)),
+            skillCount = gameProperties.getOrDefault("skill-count", SkillSet.DEFAULT_SKILL_COUNT),
+            npcStatCount = gameProperties.getOrDefault("npc-stat-count", Npc.Stats.DEFAULT_NPC_STAT_COUNT),
+            runEnergy = gameProperties.getOrDefault("run-energy", true),
+            gItemPublicDelay = gameProperties.getOrDefault("gitem-public-spawn-delay", GroundItem.DEFAULT_PUBLIC_SPAWN_CYCLES),
+            gItemDespawnDelay = gameProperties.getOrDefault("gitem-despawn-delay", GroundItem.DEFAULT_DESPAWN_CYCLES),
+            preloadMaps = gameProperties.getOrDefault("preload-maps", false))
 
         val devContext = DevContext(
                 debugExamines = devProperties.getOrDefault("debug-examines", false),

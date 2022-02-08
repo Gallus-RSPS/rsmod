@@ -118,7 +118,12 @@ class JsonPlayerSerializer : PlayerSerializerService() {
             data.varps.forEach { varp ->
                 client.varps.setState(varp.id, varp.state)
             }
-
+            data.songs.forEach { song ->
+                client.songs.setUnlocked(song.id, song.unlocked)
+            }
+            client.regularFlour = data.regularFlour
+            client.hopperGrain = data.hopperGrain
+            client.harmonyFlour = data.harmonyFlour
             return PlayerLoadResult.LOAD_ACCOUNT
         } catch (e: Exception) {
             logger.error(e) { "Error when loading player: ${request.username}" }
@@ -128,11 +133,12 @@ class JsonPlayerSerializer : PlayerSerializerService() {
 
     override fun saveClientData(client: Client): Boolean {
         val data = JsonPlayerSaveData(passwordHash = client.passwordHash, username = client.loginUsername, previousXteas = client.currentXteaKeys,
-                displayName = client.username, x = client.tile.x, z = client.tile.z, height = client.tile.height,
-                privilege = client.privilege.id, runEnergy = client.runEnergy, displayMode = client.interfaces.displayMode.id,
-                appearance = client.getPersistentAppearance(), skills = client.getPersistentSkills(), itemContainers = client.getPersistentContainers(),
-                attributes = client.attr.toPersistentMap(), timers = client.timers.toPersistentTimers(),
-                varps = client.varps.getAll().filter { it.state != 0 })
+            displayName = client.username, x = client.tile.x, z = client.tile.z, height = client.tile.height,
+            privilege = client.privilege.id, runEnergy = client.runEnergy, displayMode = client.interfaces.displayMode.id,
+            appearance = client.getPersistentAppearance(), skills = client.getPersistentSkills(), itemContainers = client.getPersistentContainers(),
+            attributes = client.attr.toPersistentMap(), timers = client.timers.toPersistentTimers(),
+            varps = client.varps.getAll().filter { it.state != 0 }, regularFlour = client.regularFlour, hopperGrain = client.hopperGrain,
+            songs = client.songs.getAll().filter {it.unlocked != 0 }, harmonyFlour = client.harmonyFlour)
         val writer = Files.newBufferedWriter(path.resolve(client.loginUsername))
         val json = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
         json.toJson(data, writer)
