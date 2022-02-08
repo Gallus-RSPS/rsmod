@@ -4,6 +4,19 @@ package gg.rsmod.plugins.content.skills.farming
 val CATH_NORTH_PATCH = AttributeKey<Boolean>(persistenceKey = "cath_north_patch")
 val CATH_SOUTH_PATCH = AttributeKey<Boolean>(persistenceKey = "cath_south_patch")
 
+/**
+ * Cath North Allotmet Varbit = 4771
+ * Cath South Allotment Varbit = 4772
+ *
+ * 0 -> Full of Weeds
+ * 1 -> Weed State 1
+ * 2 -> Weed State 2
+ * 3 -> No Weeds
+ *
+ * Also Varbit GRAPES_4953 (North) Changes along with it
+ * Also Varbit GRAPES_4955 (South) Changes along with it
+ */
+
 val ALLOTMENT_VARBIT = 4771
 var WEED_STATE = 0
 val NEXT_WEED_GROWTH = TimerKey("next_weed_growth")
